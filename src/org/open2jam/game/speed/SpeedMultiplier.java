@@ -14,7 +14,7 @@ public class SpeedMultiplier implements Speed {
     private static final double MAX_SPEED = 10;
     private static final double MIN_SPEED = 0.5;
     
-    private static final double SPEED_STEP = 0.5d;
+    private static final double SPEED_STEP = 0.05d;
     private static final double SPEED_FACTOR = 0.005d;
 
     public SpeedMultiplier(double speed) {

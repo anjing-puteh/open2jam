@@ -146,6 +146,19 @@ public class LWJGLSprite implements Sprite {
                     GL11.glVertex2f(0,height);
                     GL11.glVertex2f(width, height);
                     break;
+                    case Blind: //blind (hide middle part)
+                    GL11.glColor4f(0f,0f,0f,0f); // 1st middle alpha
+                    GL11.glVertex2f(0,split*0.8f);
+                    GL11.glVertex2f(width, split*0.8f);
+                    GL11.glColor3f(0f,0f,0f); // first black rec
+                    GL11.glVertex2f(0,split*1.3f);
+                    GL11.glVertex2f(width, split*1.3f);
+                    GL11.glVertex2f(0,split*2.7f);
+                    GL11.glVertex2f(width, split*2.7f);
+                    GL11.glColor4f(0f,0f,0f,0f); // 2nd middle alpha
+                    GL11.glVertex2f(0,split*2.9f);
+                    GL11.glVertex2f(width, split*2.9f);              
+                    break;
                     default: //none
                     break;
                 }

@@ -409,12 +409,11 @@ public class MusicSelection extends javax.swing.JPanel
         txt_res_width.setText("800");
         txt_res_width.setEnabled(false);
 
-        jc_vsync.setSelected(true);
         jc_vsync.setText("Use VSync");
 
         lbl_display.setText("Display:");
 
-        jc_custom_size.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jc_custom_size.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jc_custom_size.setText("Custom size:");
         jc_custom_size.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -492,10 +491,9 @@ public class MusicSelection extends javax.swing.JPanel
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panel_settingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(cb_autoSyncDisplay)
-                                    .addComponent(cb_autoSyncAudio))
-                                .addGap(4, 4, 4))))
+                                    .addComponent(cb_autoSyncAudio)))))
                     .addComponent(jLabel3))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         panel_settingLayout.setVerticalGroup(
             panel_settingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -566,7 +564,7 @@ public class MusicSelection extends javax.swing.JPanel
                     .addComponent(btn_delete)
                     .addComponent(load_progress, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(table_scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                .addComponent(table_scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_filter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -575,7 +573,7 @@ public class MusicSelection extends javax.swing.JPanel
                 .addComponent(panel_setting, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        panel_song.setName("");
+        panel_song.setName(""); // NOI18N
 
         panel_modifiers.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Modifiers", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
         panel_modifiers.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -607,7 +605,7 @@ public class MusicSelection extends javax.swing.JPanel
 
         combo_visibilityModifier.setModel(new javax.swing.DefaultComboBoxModel(GameOptions.VisibilityMod.values()));
 
-        js_hispeed.setModel(new javax.swing.SpinnerNumberModel(1.0d, 0.5d, 10.0d, 0.5d));
+        js_hispeed.setModel(new javax.swing.SpinnerNumberModel(1.0d, 0.05d, 10.0d, 0.05d));
         js_hispeed.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         lbl_rank.setText("Rank:");
@@ -906,8 +904,8 @@ public class MusicSelection extends javax.swing.JPanel
                 .addComponent(panel_modifiers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        bt_play.setFont(new java.awt.Font("Tahoma", 1, 24));
-        bt_play.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/open2jam_icon.png")));
+        bt_play.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        bt_play.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/open2jam_icon.png"))); // NOI18N
         bt_play.setText("PLAY !!!");
         bt_play.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

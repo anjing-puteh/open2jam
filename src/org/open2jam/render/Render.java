@@ -103,6 +103,24 @@ public class Render implements GameWindowCallback
 
     /** The recorded fps */
     int fps;
+    
+    /** Accuracy calculation **/
+    int noteCount = 0;
+    int noteCool = 0;
+    int noteGood = 0;
+    int noteBad = 0;
+    int noteMiss = 0;
+    double scoreCurrent = 0;
+    double scoreIdeal = 0;
+    
+    /** Extra details for Modifiers etc **/
+    String visMod;
+    String chnMod;
+    
+    /** Extra details for play progress tracking **/
+    int barValue;
+    boolean failedStats;
+    String playProgress;
 
     /** the current "calculated" speed */
     double speed;
@@ -136,7 +154,6 @@ public class Render implements GameWindowCallback
     Runnable increaseMeasureRunnable = new Runnable() {
         @Override
         public void run() {
-            gameMeasure += 1;
         }
     };
 
@@ -379,17 +396,78 @@ public class Render implements GameWindowCallback
             public boolean isVisible() { return true; }
         });
         
+        if(haste){
+            statusList.add(new StatusItem() {
+
+                @Override
+                public String getText() {
+                    return "Game Speed: " + String.format("%+d", pitchShift);
+                }
+
+                @Override
+                public boolean isVisible() { return true; }
+            });
+        }
+        
+        //Added accuracy display
+        statusList.add(new StatusItem() {
+            @Override
+            public String getText() {
+                return "Accuracy: " + String.format("%.2f", (scoreCurrent / scoreIdeal) * 100);
+            }
+
+            @Override
+            public boolean isVisible() { return true; }
+        });
+
+        //Added display for modifiers
+        if(opt.getVisibilityModifier() != GameOptions.VisibilityMod.None){
+            statusList.add(new StatusItem() {
+                @Override
+                public String getText() {
+                    return "Visibility Mod: " + visMod;
+                }
+
+                @Override
+                public boolean isVisible() { return true; }
+            });
+        } 
+        
+        if(opt.getChannelModifier() != GameOptions.ChannelMod.None){
+            statusList.add(new StatusItem() {
+                @Override
+                public String getText() {
+                    return "Channel Mod: " + chnMod;
+                }
+
+                @Override
+                public boolean isVisible() { return true; }
+            });
+        } 
+        
+        //Added note hits for personal reference
         statusList.add(new StatusItem() {
 
             @Override
             public String getText() {
-                return "Game Speed: " + String.format("%+d", pitchShift);
+                return "Cool: " + noteCool + " Good: " + noteGood + " Bad: " + noteBad + " Miss: " + noteMiss;
             }
 
             @Override
             public boolean isVisible() { return true; }
         });
         
+        //Added clear status
+        statusList.add(new StatusItem() {
+            @Override
+            public String getText() {
+                return "Progress: " + playProgress;
+            }
+
+            @Override
+            public boolean isVisible() { return true; }
+        });
+           
         haste = opt.isHasteMode();
         normalizeSpeed = opt.isHasteModeNormalizeSpeed();
         window.setDisplay(dm,opt.isDisplayVsync(),opt.isDisplayFullscreen());
@@ -518,9 +596,12 @@ public class Render implements GameWindowCallback
         pills_draw = new LinkedList<Entity>();
 
         visibility_entity = new CompositeEntity();
-        if(opt.getVisibilityModifier() != GameOptions.VisibilityMod.None)
+        if(opt.getVisibilityModifier() != GameOptions.VisibilityMod.None){
+        /* get details for visibility modifier */
+            visMod = opt.getVisibilityModifier().toString();
             visibility(opt.getVisibilityModifier());
-
+        }
+        
         judgment_line = skin.getEntityMap().get("JUDGMENT_LINE");
         entities_matrix.add(judgment_line);
 
@@ -558,7 +639,8 @@ public class Render implements GameWindowCallback
                 event_list.channelRandom();
             break;
         }
-	
+	/* Get details for channel modifier */
+        chnMod = opt.getChannelModifier().toString();
 	bgaEntity = (BgaEntity) skin.getEntityMap().get("BGA");
 	entities_matrix.add(bgaEntity);
 	
@@ -679,6 +761,10 @@ public class Render implements GameWindowCallback
             multiplier = 2; // easy coefficient
         }
         int maxLife = base * multiplier;
+      
+        //Set life bar to 1000 only (experimental)
+       maxLife = 1000;
+       playProgress = "Clear";
         lifebar_entity.setLimit(maxLife);
         lifebar_entity.setNumber(maxLife);
     }
@@ -817,7 +903,7 @@ public class Render implements GameWindowCallback
         if(!buffer_iterator.hasNext() && entities_matrix.isEmpty(note_layer)){
             if (finish_time == -1) {
                 finish_time = System.currentTimeMillis() + 10000;
-            } else if (System.currentTimeMillis() > finish_time) {
+            } else if (System.currentTimeMillis() > finish_time) {      
                 soundSystem.release();
                 window.destroy();
             }
@@ -1142,14 +1228,42 @@ public class Render implements GameWindowCallback
             case COOL:
                 jambar_entity.addNumber(2);
                 consecutive_cools++;
-                lifebar_entity.addNumber(rank >= 2 ? 48 : 96);
+                
+                //lifebar_entity.addNumber(rank >= 2 ? 48 : 96);
+                //Experimental lifebar adjustments to match O2Jam 
+                if(rank >= 2)
+                {
+                    lifebar_entity.addNumber(1);
+                } else if (rank >= 1)
+                {
+                    lifebar_entity.addNumber(2);
+                }else
+                {
+                    lifebar_entity.addNumber(3);
+                }
+                             
                 score_value = 200 + (jamcombo_entity.getNumber()*10);
+                noteCool++;   
                 break;
 
             case GOOD:
                 jambar_entity.addNumber(1);
                 consecutive_cools = 0;
+                
+                //Experimental lifebar adjustments to match O2Jam 
+                if(rank >= 2)
+                {
+                    lifebar_entity.addNumber(0);
+                } else if (rank >= 1)
+                {
+                    lifebar_entity.addNumber(1);
+                }else
+                {
+                    lifebar_entity.addNumber(2);
+                }
+                
                 score_value = 100;
+                noteGood++;
                 break;
 
             case BAD:
@@ -1159,17 +1273,31 @@ public class Render implements GameWindowCallback
                     jambar_entity.addNumber(1);
                     pills_draw.removeLast().setDead(true);
 
-                    score_value = 100; // TODO: not sure
+                    //score_value = 100; // TODO: not sure
+                    score_value = 200; // If pills still available, treat as cool and consume a pill
                 }
                 else
                 {
                     jambar_entity.setNumber(0);
                     jamcombo_entity.resetNumber();
-                    lifebar_entity.subtractNumber(240);
+                    //lifebar_entity.subtractNumber(240);
+                    
+                    //Experimental lifebar adjustments to match O2Jam 
+                    if(rank >= 2)
+                    {
+                        lifebar_entity.subtractNumber(5);
+                    } else if (rank >= 1)
+                    {
+                        lifebar_entity.subtractNumber(7);
+                    }else
+                    {
+                        lifebar_entity.subtractNumber(10);
+                    }
 
                     score_value = 4;
                 }
                 consecutive_cools = 0;
+                noteBad++;
             break;
 
             case MISS:
@@ -1177,10 +1305,23 @@ public class Render implements GameWindowCallback
                 jamcombo_entity.resetNumber();
                 consecutive_cools = 0;
 
-                lifebar_entity.subtractNumber(1440);
+                //lifebar_entity.subtractNumber(1440);
+                
+                //Experimental lifebar adjustments to match O2Jam 
+                if(rank >= 2)
+                {
+                    lifebar_entity.subtractNumber(30);
+                } else if (rank >= 1)
+                {
+                    lifebar_entity.subtractNumber(40);
+                }else
+                {
+                    lifebar_entity.subtractNumber(50);
+                }
 
                 if(score_entity.getNumber() >= 10)score_value = -10;
                 else score_value = -score_entity.getNumber();
+                noteMiss++;
             break;
         }
         
@@ -1204,9 +1345,20 @@ public class Render implements GameWindowCallback
         {
             maxcombo_entity.incNumber();
         }
+        /* Play progress tracking */
+        barValue = lifebar_entity.getNumber();
+        if(barValue == 0)
+        {
+            failedStats = true;
+            playProgress = "Fail";
+        } 
+        
+        /* Calculate the scores for accuracy update */
+        noteCount = noteCool + noteGood + noteBad + noteMiss;
+        scoreCurrent = (noteBad * 50) + (noteGood * 100) + (noteCool * 300);
+        scoreIdeal = noteCount * 300;
         
         return result;
-
     }
     
     /* play a sample */
@@ -1285,6 +1437,7 @@ public class Render implements GameWindowCallback
                     m.setTime(e.getTime());
                     m.setOnJudge(increaseMeasureRunnable);
                     entities_matrix.add(m);
+                    gameMeasure += 1;
 		    
                 break;
                     
@@ -1552,7 +1705,7 @@ public class Render implements GameWindowCallback
         }
 
         // FIXME this is a hack
-        if(value != GameOptions.VisibilityMod.Sudden)skin.getEntityMap().get("JUDGMENT_LINE").setLayer(layer);
+        if(value != GameOptions.VisibilityMod.Sudden && value != GameOptions.VisibilityMod.Blind)skin.getEntityMap().get("JUDGMENT_LINE").setLayer(layer);
         skin.getEntityMap().get("MEASURE_MARK").setLayer(layer);
         
         entities_matrix.add(visibility_entity);
@@ -1563,8 +1716,10 @@ public class Render implements GameWindowCallback
      */
     @Override
     public void windowClosed() {
-	bgaEntity.release();
+        
+        bgaEntity.release();
         soundSystem.release();
+        
 	System.gc();        
         if (syncingLatency != null && autosyncCallback != null) {
             SwingUtilities.invokeLater(new Runnable() {
@@ -1581,3 +1736,4 @@ public class Render implements GameWindowCallback
         return Math.min(Math.max(value, min), max);
     }
 }
+

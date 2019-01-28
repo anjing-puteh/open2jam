@@ -35,9 +35,10 @@ public class GameOptions {
     
     /*
      * "None"=>0, "Hidden"=>1, "Sudden"=>2, "Dark"=>3
+     * Added "Blind"=>4, experimental 
      */
     public enum VisibilityMod {
-        None, Hidden, Sudden, Dark;
+        None, Hidden, Sudden, Dark, Blind;
     }
     
     /*
