@@ -762,7 +762,7 @@ public class Render implements GameWindowCallback
         }
         int maxLife = base * multiplier;
       
-        //Set life bar to 1000 only (experimental)
+        //Set life bar to 1000 only, emulate o2jam behavior (experimental)
        maxLife = 1000;
        playProgress = "Clear";
         lifebar_entity.setLimit(maxLife);
