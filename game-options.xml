@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_111" class="java.beans.XMLDecoder">
+ <object class="org.open2jam.GameOptions">
+  <void property="autoplay">
+   <boolean>true</boolean>
+  </void>
+  <void property="channelModifier">
+   <object class="java.lang.Enum" method="valueOf">
+    <class>org.open2jam.GameOptions$ChannelMod</class>
+    <string>Random</string>
+   </object>
+  </void>
+  <void property="displayBitsPerPixel">
+   <int>32</int>
+  </void>
+  <void property="displayFrequency">
+   <int>60</int>
+  </void>
+  <void property="displayHeight">
+   <int>1080</int>
+  </void>
+  <void property="displayVsync">
+   <boolean>false</boolean>
+  </void>
+  <void property="displayWidth">
+   <int>1920</int>
+  </void>
+  <void property="speedMultiplier">
+   <double>4.5</double>
+  </void>
+  <void property="visibilityModifier">
+   <object class="java.lang.Enum" method="valueOf">
+    <class>org.open2jam.GameOptions$VisibilityMod</class>
+    <string>Blind</string>
+   </object>
+  </void>
+ </object>
+</java>
