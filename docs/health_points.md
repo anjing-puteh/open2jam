@@ -3,48 +3,38 @@
 Health Points
 =============
 
-This observation is based on O2Mania version 1.3.0.
-
-Good judgment does not affect health points in all difficulties.
+This is my observation from the actual O2Jam client itself.
+The HP starts with 100, I've confirmed this from the memory address that points to the HP bar value.
+Each difficulty will have it's own value for each judgement.
 
 Easy Difficulty
 ---------------
 
-* Miss : -6%
-* Bad : -1%
-* Cool : +0.4%
+* Miss : -5
+* Bad : -1
+* Good: +0.2
+* Cool : +0.3
 
 Normal Difficulty
 -----------------
 
-* Miss : -4%
-* Bad : -2/3%
-* Cool : +8/3%
+* Miss : -4
+* Bad : -0.7
+* Good: +0.1
+* Cool : +0.2
 
 Hard Difficulty
 ---------------
 
-* Miss : -3%
-* Bad : -0.5%
-* Cool : 0.1%
+* Miss : -3
+* Bad : -0.5
+* Good: 0
+* Cool : +0.1
 
+Additional Info
+---------------
 
-Generalization
-==============
-
-Therefore, if the health are only integers, the above could be generalized like this:
-
-Maximum health:
-
-* Easy: 12000 * 2 = 24000 points
-* Normal: 12000 * 3 = 36000 points
-* Hard: 12000 * 4 = 48000 points
-
-Health gaining and draining:
-
-* Miss: -1440 points
-* Bad: -240 points
-* Cool: 96 points for easy and normal, 48 points for hard
+If pill(s) count > 1, remove 1 pill for each bad taken and convert it to cool until it reaches 0.
 
 
 
